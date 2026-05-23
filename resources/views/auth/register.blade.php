@@ -1,283 +1,179 @@
+{{-- resources/views/auth/register.blade.php --}}
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daftar — PSIK Vokasi UB</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        'serif-display': ['"DM Serif Display"', 'serif'],
-                        'sans': ['"DM Sans"', 'sans-serif'],
-                    },
-                    colors: {
-                        navy: {
-                            DEFAULT: '#253465',
-                            dark:    '#1b2649',
-                            light:   '#2d3f6b',
-                        },
-                        gold: {
-                            DEFAULT: '#f5a623',
-                            light:   '#fdb944',
-                            muted:   '#fff4e0',
-                        },
-                        ink: {
-                            DEFAULT: '#1e2a45',
-                            muted:   '#5a677f',
-                            faint:   '#a8b3c4',
-                        },
-                        line:    '#dde3ed',
-                        surface: '#f7f8fb',
-                    },
-                }
-            }
-        }
-    </script>
+    <title>Register - Sistem Pengajuan Konten</title>
+
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
     <style>
-        /* Pseudo-element dekoratif — tidak bisa murni Tailwind */
-        .panel-left::before {
-            content: '';
-            position: absolute;
-            top: -100px; right: -100px;
-            width: 360px; height: 360px;
-            border: 1px solid rgba(245,166,35,0.12);
-            border-radius: 50%;
-        }
-        /* Autofill override */
-        input:-webkit-autofill,
-        input:-webkit-autofill:hover,
-        input:-webkit-autofill:focus {
-            -webkit-box-shadow: 0 0 0 40px #ffffff inset !important;
-            -webkit-text-fill-color: #1e2a45 !important;
+        body {
+            background:
+                radial-gradient(circle at bottom, rgba(0,255,255,0.25), transparent 35%),
+                linear-gradient(135deg, #003B5C 0%, #0077A2 60%, #00A9C5 100%);
         }
     </style>
 </head>
-<body class="min-h-screen grid grid-cols-1 md:grid-cols-2 bg-surface font-sans text-ink" style="font-family:'DM Sans',sans-serif;">
 
-    <!-- ── Panel Kiri ── -->
-    <aside class="panel-left relative hidden md:flex flex-col justify-between bg-navy text-white overflow-hidden px-14 py-12">
+<body class="min-h-screen font-sans text-white">
 
-        <!-- Gold bar atas -->
-        <div class="absolute top-0 left-0 right-0 h-[3px] bg-gold"></div>
+    {{-- Navbar --}}
+    <nav class="bg-[#006A97] shadow-lg">
+        <div class="max-w-7xl mx-auto h-16 px-6 lg:px-8 flex items-center justify-between">
 
-        <!-- Brand -->
-        <div class="flex items-center gap-[14px]">
-            <img src="{{ asset('img/logo.png') }}"
-                 class="w-[52px] h-[52px] object-contain brightness-0 invert"
-                 alt="Vokasi UB">
-            <div>
-                <div class="font-serif-display text-[15px] tracking-[0.02em] text-white"
-                     style="font-family:'DM Serif Display',serif;">
-                    PSIK · Vokasi UB
-                </div>
-                <div class="text-[11px] font-light text-white/50 tracking-[0.04em] mt-[1px]">
-                    Universitas Brawijaya
-                </div>
-            </div>
-        </div>
+            <div class="flex items-center gap-3">
+                <img
+                    src="{{ asset('img/logo.png') }}"
+                    alt="Logo FILKOM"
+                    class="w-10 h-10 object-contain"
+                >
 
-        <!-- Headline -->
-        <div class="relative z-10">
-            <h1 class="text-[clamp(2.2rem,3vw,2.9rem)] leading-[1.18] font-normal mb-5 text-white"
-                style="font-family:'DM Serif Display',serif;">
-                Bergabung<br>
-                <em class="italic text-gold-light">dengan</em><br>
-                PSIK
-            </h1>
-            <p class="text-sm leading-[1.7] text-white/50 max-w-[300px] font-light">
-                Daftarkan diri Anda untuk mengakses layanan peminjaman dan fasilitas PSIK Vokasi UB.
-            </p>
-        </div>
-
-        <!-- Steps -->
-        <div class="relative z-10 flex flex-col gap-5">
-            @foreach([
-                ['01', 'Buat akun',           'Isi data diri dengan NIM dan email kampus'],
-                ['02', 'Ajukan peminjaman',    'Pilih alat atau studio yang dibutuhkan'],
-                ['03', 'Pantau status',        'Terima konfirmasi dan lacak status secara langsung'],
-            ] as [$num, $title, $desc])
-            <div class="flex gap-[14px] items-start">
-                <span class="shrink-0 w-5 pt-[2px] text-[11px] text-gold opacity-60"
-                      style="font-family:'DM Serif Display',serif;">
-                    {{ $num }}
-                </span>
                 <div>
-                    <h4 class="text-[13px] font-medium text-white/75 mb-[2px]">{{ $title }}</h4>
-                    <p class="text-[12px] text-white/35 font-light leading-[1.5]">{{ $desc }}</p>
+                    <h1 class="text-white text-base font-bold leading-tight">
+                        FILKOM UB
+                    </h1>
+
+                    <p class="text-white/80 text-sm">
+                        Sistem Pengajuan Konten
+                    </p>
                 </div>
             </div>
-            @endforeach
+
         </div>
-    </aside>
+    </nav>
 
-    <!-- ── Panel Kanan ── -->
-    <main class="flex items-center justify-center p-8 pt-20 md:pt-8 bg-surface">
-        <div class="w-full max-w-[380px]">
+    {{-- Content --}}
+    <div class="max-w-4xl mx-auto px-8 pt-6">
 
-            <!-- Header form -->
-            <div class="mb-8">
-                <p class="text-[11px] font-medium tracking-[0.12em] uppercase text-gold mb-2">Pendaftaran</p>
-                <h2 class="text-[1.9rem] font-normal text-ink leading-[1.2]"
-                    style="font-family:'DM Serif Display',serif;">
-                    Buat akun baru
-                </h2>
+        {{-- Back --}}
+        <a
+            href="{{ url('/') }}"
+            class="inline-flex items-center gap-2 text-white text-sm mb-8 hover:opacity-80 transition"
+        >
+            ← Kembali
+        </a>
+
+        {{-- Card --}}
+        <div class="bg-white/10 backdrop-blur-sm rounded-2xl shadow-2xl overflow-hidden">
+
+            <div class="bg-[#F0F4F8] rounded-2xl">
+
+                <form method="POST" action="{{ url('/register') }}" class="p-10">
+                    @csrf
+
+                    {{-- Title --}}
+                    <div class="mb-8 text-center">
+                        <h2 class="text-2xl font-bold text-[#003B5C] mb-2">
+                            Buat Akun Baru
+                        </h2>
+
+                        <p class="text-sm text-gray-600">
+                            Daftarkan akun untuk mengakses sistem pengajuan konten digital FILKOM UB
+                        </p>
+                    </div>
+
+                    {{-- Nama --}}
+                    <div class="mb-6">
+                        <label class="block text-[#0A88C2] text-sm font-semibold mb-2">
+                            Nama Lengkap
+                        </label>
+
+                        <input
+                            type="text"
+                            name="name"
+                            placeholder="Masukkan nama lengkap"
+                            class="w-full h-12 rounded-xl border border-gray-300 bg-white px-4 text-sm text-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                        >
+                    </div>
+
+                    {{-- Email --}}
+                    <div class="mb-6">
+                        <label class="block text-[#0A88C2] text-sm font-semibold mb-2">
+                            Email
+                        </label>
+
+                        <input
+                            type="email"
+                            name="email"
+                            placeholder="Masukkan email"
+                            class="w-full h-12 rounded-xl border border-gray-300 bg-white px-4 text-sm text-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                        >
+                    </div>
+
+                    {{-- NIM --}}
+                    <div class="mb-6">
+                        <label class="block text-[#0A88C2] text-sm font-semibold mb-2">
+                            NIM
+                        </label>
+
+                        <input
+                            type="text"
+                            name="nim"
+                            placeholder="Masukkan NIM"
+                            class="w-full h-12 rounded-xl border border-gray-300 bg-white px-4 text-sm text-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                        >
+                    </div>
+
+                    {{-- Password --}}
+                    <div class="mb-6">
+                        <label class="block text-[#0A88C2] text-sm font-semibold mb-2">
+                            Kata Sandi
+                        </label>
+
+                        <input
+                            type="password"
+                            name="password"
+                            placeholder="Masukkan kata sandi"
+                            class="w-full h-12 rounded-xl border border-gray-300 bg-white px-4 text-sm text-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                        >
+                    </div>
+
+                    {{-- Konfirmasi Password --}}
+                    <div class="mb-10">
+                        <label class="block text-[#0A88C2] text-sm font-semibold mb-2">
+                            Konfirmasi Kata Sandi
+                        </label>
+
+                        <input
+                            type="password"
+                            name="password_confirmation"
+                            placeholder="Ulangi kata sandi"
+                            class="w-full h-12 rounded-xl border border-gray-300 bg-white px-4 text-sm text-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                        >
+                    </div>
+
+                    {{-- Button --}}
+                    <button
+                        type="submit"
+                        class="w-full h-12 rounded-xl bg-[#0A88C2] hover:bg-[#0875a6] transition text-white text-base font-semibold shadow"
+                    >
+                        Daftar
+                    </button>
+
+                    {{-- Login --}}
+                    <div class="mt-6 text-center">
+                        <p class="text-sm text-gray-600">
+                            Sudah memiliki akun?
+
+                            <a
+                                href="{{ url('/login') }}"
+                                class="text-[#0A88C2] font-semibold hover:underline"
+                            >
+                                Masuk sekarang
+                            </a>
+                        </p>
+                    </div>
+
+                </form>
+
             </div>
 
-            <form method="POST" action="{{ route('register.process') }}">
-                @csrf
-
-                <!-- Nama lengkap -->
-                <div class="mb-[0.9rem]">
-                    <label for="name" class="block text-[12px] font-medium text-ink-muted mb-[5px] tracking-[0.01em]">
-                        Nama lengkap
-                    </label>
-                    <input type="text" id="name" name="name"
-                           placeholder="Masukkan nama lengkap"
-                           required autocomplete="off"
-                           class="w-full h-11 px-3 rounded-lg border border-line bg-white
-                                  text-sm text-ink placeholder-ink-faint outline-none
-                                  transition duration-150
-                                  focus:border-navy-light focus:shadow-[0_0_0_3px_rgba(37,52,101,0.1)]">
-                </div>
-
-                <!-- NIM -->
-                <div class="mb-[0.9rem]">
-                    <label for="nim" class="block text-[12px] font-medium text-ink-muted mb-[5px] tracking-[0.01em]">
-                        NIM
-                    </label>
-                    <input type="text" id="nim" name="nim"
-                           placeholder="Nomor Induk Mahasiswa"
-                           required autocomplete="off" inputmode="numeric" pattern="[0-9]*"
-                           class="w-full h-11 px-3 rounded-lg border border-line bg-white
-                                  text-sm text-ink placeholder-ink-faint outline-none
-                                  transition duration-150
-                                  focus:border-navy-light focus:shadow-[0_0_0_3px_rgba(37,52,101,0.1)]">
-                    @error('nim')
-                    <p class="text-[12px] text-[#c0392b] mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <!-- Email -->
-                <div class="mb-[0.9rem]">
-                    <label for="email" class="block text-[12px] font-medium text-ink-muted mb-[5px] tracking-[0.01em]">
-                        Email
-                    </label>
-                    <input type="email" id="email" name="email"
-                           placeholder="nama@student.ub.ac.id"
-                           required autocomplete="off"
-                           class="w-full h-11 px-3 rounded-lg border border-line bg-white
-                                  text-sm text-ink placeholder-ink-faint outline-none
-                                  transition duration-150
-                                  focus:border-navy-light focus:shadow-[0_0_0_3px_rgba(37,52,101,0.1)]">
-                    @error('email')
-                    <p class="text-[12px] text-[#c0392b] mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <!-- Password -->
-                <div class="mb-[0.9rem]">
-                    <label for="password" class="block text-[12px] font-medium text-ink-muted mb-[5px] tracking-[0.01em]">
-                        Kata sandi
-                    </label>
-                    <div class="relative">
-                        <input type="password" id="password" name="password"
-                               placeholder="Min. 8 karakter"
-                               required autocomplete="new-password"
-                               oninput="checkStrength(this.value)"
-                               class="w-full h-11 pl-3 pr-10 rounded-lg border border-line bg-white
-                                      text-sm text-ink placeholder-ink-faint outline-none
-                                      transition duration-150
-                                      focus:border-navy-light focus:shadow-[0_0_0_3px_rgba(37,52,101,0.1)]">
-                        <button type="button"
-                                onclick="togglePwd()"
-                                aria-label="Tampilkan sandi"
-                                class="absolute right-3 top-1/2 -translate-y-1/2 flex items-center
-                                       text-ink-faint hover:text-ink-muted transition duration-150
-                                       bg-transparent border-0 cursor-pointer p-[2px]">
-                            <svg id="ico-eye" class="w-4 h-4"
-                                 fill="none" stroke="currentColor" stroke-width="1.5"
-                                 stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                                <circle cx="12" cy="12" r="3"/>
-                            </svg>
-                        </button>
-                    </div>
-
-                    <!-- Strength bar -->
-                    <div class="flex gap-1 mt-[7px]">
-                        <div id="s1" class="h-[3px] flex-1 rounded-sm bg-line transition-colors duration-300"></div>
-                        <div id="s2" class="h-[3px] flex-1 rounded-sm bg-line transition-colors duration-300"></div>
-                        <div id="s3" class="h-[3px] flex-1 rounded-sm bg-line transition-colors duration-300"></div>
-                        <div id="s4" class="h-[3px] flex-1 rounded-sm bg-line transition-colors duration-300"></div>
-                    </div>
-                    <p id="strength-text" class="text-[11px] text-ink-faint mt-[5px] h-[14px]"></p>
-                </div>
-
-                <!-- Submit -->
-                <button type="submit"
-                        class="relative w-full h-[46px] mt-5 overflow-hidden rounded-lg
-                               bg-navy text-white text-sm font-medium tracking-[0.01em]
-                               transition duration-150 hover:bg-navy-dark active:scale-[0.99]
-                               border-0 cursor-pointer">
-                    Buat akun
-                    <span class="absolute bottom-0 left-0 right-0 h-[2.5px] bg-gold"></span>
-                </button>
-            </form>
-
-            <!-- Footer form -->
-            <p class="mt-6 text-center text-[13px] text-ink-faint">
-                Sudah punya akun?
-                <a href="{{ route('login') }}"
-                   class="text-navy font-medium no-underline hover:text-gold transition duration-150">
-                    Masuk di sini
-                </a>
-            </p>
-
         </div>
-    </main>
 
-    <script>
-        function togglePwd() {
-            const inp = document.getElementById('password');
-            const ico = document.getElementById('ico-eye');
-            if (inp.type === 'password') {
-                inp.type = 'text';
-                ico.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>';
-            } else {
-                inp.type = 'password';
-                ico.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
-            }
-        }
+    </div>
 
-        const levels = [
-            { label: '',              colors: [] },
-            { label: 'Terlalu lemah', colors: ['#e24b4a'] },
-            { label: 'Lemah',         colors: ['#ef9f27','#ef9f27'] },
-            { label: 'Cukup',         colors: ['#f5a623','#f5a623','#f5a623'] },
-            { label: 'Kuat',          colors: ['#1d9e75','#1d9e75','#1d9e75','#1d9e75'] }
-        ];
-
-        function checkStrength(v) {
-            let score = 0;
-            if (v.length >= 8) score++;
-            if (/[a-z]/.test(v) && /[A-Z]/.test(v)) score++;
-            if (/[0-9]/.test(v)) score++;
-            if (/[^a-zA-Z0-9]/.test(v)) score++;
-            const segs  = ['s1','s2','s3','s4'];
-            const lvl   = v.length === 0 ? 0 : Math.max(1, score);
-            segs.forEach((id, i) => {
-                document.getElementById(id).style.background = levels[lvl].colors[i] || '#dde3ed';
-            });
-            const el  = document.getElementById('strength-text');
-            const clr = ['','#a8b3c4','#c0392b','#b8860b','#1a7a4a'];
-            el.textContent  = levels[lvl].label;
-            el.style.color  = clr[lvl] || '';
-        }
-    </script>
 </body>
 </html>

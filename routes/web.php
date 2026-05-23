@@ -7,8 +7,10 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PublicationController;
 
-// ── Halaman awal → login ────────────────────────────────────────
-Route::get('/', fn() => redirect('/login'));
+// ── Landing Page ────────────────────────────────────────────────
+Route::get('/', function () {
+    return view('landing');
+});
 
 // ── Auth (guest) ────────────────────────────────────────────────
 Route::get('/login',    [AuthController::class, 'showLogin'])->name('login');
