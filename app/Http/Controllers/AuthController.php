@@ -23,14 +23,12 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            // Redirect berdasarkan role
             if (Auth::user()->role === 'admin') {
-                return redirect()->route('dashboard')
+                return redirect()->route('admin.dashboard')
                     ->with('success', 'Berhasil login, selamat datang!');
             }
 
-            // user biasa → langsung ke dashboard user
-            return redirect()->route('dashboard.user')
+            return redirect()->route('user.dashboard')
                 ->with('success', 'Berhasil login, selamat datang!');
         }
 
@@ -54,7 +52,7 @@ class AuthController extends Controller
     ], [
     'email.ends_with' => 'Gunakan email UB (@student.ub.ac.id)!',
     'email.unique'    => 'Email sudah digunakan!',
-     'nim.unique'   => 'NIM sudah terdaftar!',
+    'nim.unique'   => 'NIM sudah terdaftar!',
     ]);
         User::create([
             'name'     => $request->name,

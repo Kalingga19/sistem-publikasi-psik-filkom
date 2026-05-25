@@ -83,7 +83,7 @@
 
                         <input
                             type="text"
-                            name="login"
+                            name="email"
                             placeholder="Email atau NIM"
                             class="w-full h-12 rounded-xl border border-gray-300 bg-white px-4 text-sm text-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400"
                         >
