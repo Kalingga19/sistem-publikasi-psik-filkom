@@ -145,24 +145,24 @@ class PublicationController extends Controller
     // Detail pengajuan untuk admin (S-07)
     public function adminShow($id)
     {
-        $publication = Publication::with(['user', 'attachments', 'reviewer'])
-            ->findOrFail($id);
-
-        return view('publications.admin.show', compact('publication'));
+        return redirect()
+            ->route('admin.dashboard')
+            ->with('success', 'Status pengajuan berhasil diperbarui.');
     }
+
 
     // Admin: update status (Setujui / Revisi / Tolak) — FR-03, UR-08, UR-09
     public function updateStatus(Request $request, $id)
     {
         $publication = Publication::findOrFail($id);
 
-        $request->validate([
-            'status'         => 'required|in:Disetujui,Revisi,Ditolak',
-            'catatan_revisi' => 'required_if:status,Revisi,Ditolak|nullable|string',
-        ], [
-            'catatan_revisi.required_if' =>
-                'Catatan revisi wajib diisi jika status adalah Revisi atau Ditolak.',
-        ]);
+    $request->validate([
+        'status'         => 'required|in:Disetujui,Revisi,Ditolak',
+        'catatan_revisi' => 'required_if:status,Revisi|nullable|string',
+    ], [
+        'catatan_revisi.required_if' =>
+            'Catatan revisi wajib diisi jika status adalah Revisi.',
+    ]);
 
         $publication->update([
             'status'         => $request->status,
@@ -232,5 +232,34 @@ class PublicationController extends Controller
             $attachment->file_path,
             $attachment->nama_file
         );
+    }
+
+     // Form revisi admin
+public function showRevisiForm($id)
+{
+    $publication = Publication::with(['user', 'attachments'])
+        ->findOrFail($id);
+
+    return view('admin.form-revisi', compact('publication'));
+}
+
+    // Submit revisi admin
+    public function submitRevisi(Request $request, $id)
+    {
+        $request->validate([
+            'catatan_revisi' => 'required|string|max:1000',
+        ]);
+
+        $publication = Publication::findOrFail($id);
+
+        $publication->update([
+            'status' => 'Revisi',
+            'catatan_revisi' => $request->catatan_revisi,
+            'reviewed_by' => Auth::id(),
+        ]);
+
+        return redirect()
+            ->route('admin.dashboard')
+            ->with('success', 'Revisi berhasil dikirim.');
     }
 }

@@ -76,6 +76,16 @@ Route::middleware('auth')->group(function () {
         Route::get('/lampiran/{attachmentId}/download',
             [PublicationController::class, 'downloadAttachment']
         )->name('publications.attachment.download');
+
+                // Form revisi
+        Route::get('/pengajuan/{id}/revisi',
+            [PublicationController::class, 'showRevisiForm']
+        )->name('publications.revisi.form');
+
+        // Simpan revisi
+        Route::post('/pengajuan/{id}/revisi',
+            [PublicationController::class, 'submitRevisi']
+        )->name('publications.revisi.submit');
     });
 
 });
