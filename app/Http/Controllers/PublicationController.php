@@ -16,56 +16,70 @@ class PublicationController extends Controller
     // ══════════════════════════════════════════════════════════════
     public function index()
     {
+        $userId = Auth::id();
+
         $publications = Publication::with('attachments')
-            ->where('user_id', Auth::id())
+            ->where('user_id', $userId)
             ->latest()
             ->paginate(10);
 
-        return view('publications.index', compact('publications'));
+        $recentPublications = Publication::with('attachments')
+            ->where('user_id', $userId)
+            ->latest()
+            ->take(5)
+            ->get();
+
+        $stats = [
+            'total' => Publication::where('user_id', $userId)->count(),
+            'menunggu' => Publication::where('user_id', $userId)
+                ->where('status', 'Menunggu Validasi')
+                ->count(),
+            'disetujui' => Publication::where('user_id', $userId)
+                ->where('status', 'Disetujui')
+                ->count(),
+            'revisi' => Publication::where('user_id', $userId)
+                ->where('status', 'Revisi')
+                ->count(),
+            'ditolak' => Publication::where('user_id', $userId)
+                ->where('status', 'Ditolak')
+                ->count(),
+        ];
+
+        return view('user.dashboard', compact(
+            'publications',
+            'recentPublications',
+            'stats'
+        ));
     }
 
     // Form pengajuan baru (S-03)
     public function create()
     {
-        return view('publications.create');
+        return view('user.ajukan-konten');
     }
 
     // Simpan pengajuan baru (FR-01, FR-02, FR-03, UR-01–UR-04)
     public function store(Request $request)
     {
-        // Validasi (aturan dari SRS 3.1 & FR-01, FR-02)
         $validated = $request->validate([
             'judul'            => 'required|string|max:255',
             'jenis_konten'     => 'required|in:Prestasi Mahasiswa,Kegiatan Organisasi,Berita Akademik,Lainnya',
-            'deskripsi'        => 'required|string|min:20',
-            'objektif'         => 'required|string',
-            'media_target'     => 'required|array|min:1',
-            'media_target.*'   => 'in:Instagram,Website FILKOM',
+            'deskripsi'        => 'required|string|min:10',
             'tanggal_kegiatan' => 'nullable|date',
-            'lampiran.*'       => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240', // maks 10MB
-        ], [
-            'judul.required'         => 'Judul konten wajib diisi.',
-            'judul.max'              => 'Judul maksimal 255 karakter.',
-            'deskripsi.min'          => 'Deskripsi minimal 20 karakter.',
-            'media_target.required'  => 'Pilih minimal satu target media publikasi.',
-            'media_target.min'       => 'Pilih minimal satu target media publikasi.',
-            'lampiran.*.mimes'       => 'Format file tidak didukung. Gunakan PDF, JPG, atau PNG.',
-            'lampiran.*.max'         => 'Ukuran file terlalu besar. Maksimal 10MB per file.',
+            'lampiran.*'       => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240',
         ]);
 
-        // Simpan publication
         $publication = Publication::create([
             'user_id'          => Auth::id(),
             'judul'            => $validated['judul'],
             'jenis_konten'     => $validated['jenis_konten'],
             'deskripsi'        => $validated['deskripsi'],
-            'objektif'         => $validated['objektif'],
-            'media_target'     => $validated['media_target'],
+            'objektif'         => '-',
+            'media_target'     => ['Instagram'],
             'tanggal_kegiatan' => $validated['tanggal_kegiatan'] ?? null,
             'status'           => 'Menunggu Validasi',
         ]);
 
-        // Upload lampiran (FR-01, UR-03)
         if ($request->hasFile('lampiran')) {
             foreach ($request->file('lampiran') as $file) {
                 $path = $file->store('publications/attachments', 'public');
@@ -86,11 +100,11 @@ class PublicationController extends Controller
     // Detail pengajuan milik sendiri (S-05)
     public function show($id)
     {
-        $publication = Publication::with(['attachments', 'reviewer'])
+        $publication = Publication::with(['attachments', 'feedback.items'])
             ->where('user_id', Auth::id())
             ->findOrFail($id);
 
-        return view('publications.show', compact('publication'));
+        return view('user.revisi-konten', compact('publication'));
     }
 
     // ══════════════════════════════════════════════════════════════
