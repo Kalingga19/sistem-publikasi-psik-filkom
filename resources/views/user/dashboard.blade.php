@@ -81,15 +81,18 @@
         </div>
 
         {{-- Search --}}
-        <div class="relative mb-6">
+        <form method="GET" action="{{ route('user.dashboard') }}" class="relative mb-6">
             <div class="absolute inset-y-0 left-4 flex items-center pointer-events-none">
                 <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"/>
                 </svg>
             </div>
-            <input type="text" placeholder="Cari berdasarkan judul atau pengaju..."
+            <input type="text"
+                name="search"
+                value="{{ request('search') }}"
+                placeholder="Cari berdasarkan judul..."
                 class="w-full pl-11 pr-4 py-3 bg-white border border-gray-200 rounded-xl text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#006A97]/30 focus:border-[#006A97] shadow-sm transition">
-        </div>
+        </form>
 
         {{-- Daftar Pengajuan --}}
         <div class="bg-white rounded-2xl shadow-sm overflow-hidden border border-gray-100">
@@ -165,5 +168,30 @@
         </div>
     </footer>
 
+    <script>
+        // Auto-submit saat kolom search dikosongkan
+        document.querySelectorAll('input[name="search"]').forEach(function (input) {
+
+            input.addEventListener('input', function () {
+                if (this.value === '') {
+                    this.closest('form').submit();
+                }
+            });
+
+            // Debounce: auto-submit setelah berhenti mengetik 500ms
+            let debounceTimer;
+            input.addEventListener('keyup', function () {
+                clearTimeout(debounceTimer);
+                const val = this.value;
+                debounceTimer = setTimeout(() => {
+                    // Kalau input tidak kosong, submit otomatis setelah 500ms
+                    this.closest('form').submit();
+                }, 500);
+            });
+
+        });
+    </script>
+
 </body>
 </html>
+

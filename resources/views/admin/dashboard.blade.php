@@ -26,8 +26,8 @@
 
             <div class="flex items-center gap-3">
                 <img src="{{ asset('img/logo.png') }}"
-                     alt="Logo FILKOM"
-                     class="w-10 h-10 object-contain">
+                    alt="Logo FILKOM"
+                    class="w-10 h-10 object-contain">
 
                 <div>
                     <h1 class="text-white text-base font-bold leading-tight">
@@ -276,70 +276,58 @@
                     <div class="flex items-center gap-2 flex-wrap">
 
                         @if ($item->status === 'Menunggu Validasi')
+                            {{-- LIHAT DETAIL ← TAMBAHAN BARU --}}
+                            <a href="{{ route('admin.publications.show', $item->id) }}"
+                                class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-4 py-2 rounded-lg transition">
+                                Lihat Detail
+                            </a>
 
                             {{-- SETUJU --}}
                             <form method="POST"
-                                  action="{{ route('admin.publications.status', $item->id) }}"
-                                  class="inline">
-
+                                action="{{ route('admin.publications.status', $item->id) }}"
+                                class="inline">
                                 @csrf
-
                                 <input type="hidden" name="status" value="Disetujui">
-
                                 <button type="submit"
                                         class="bg-green-500 hover:bg-green-600 text-white text-xs font-semibold px-4 py-2 rounded-lg transition">
-
                                     Setuju
-
                                 </button>
-
                             </form>
 
                             {{-- REVISI --}}
                             <a href="{{ route('admin.publications.revisi.form', $item->id) }}"
-                               class="bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold px-4 py-2 rounded-lg transition">
-
+                                class="bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold px-4 py-2 rounded-lg transition">
                                 Revisi Konten
-
                             </a>
 
                             {{-- TOLAK --}}
                             <form method="POST"
-                                  action="{{ route('admin.publications.status', $item->id) }}"
-                                  class="inline"
-                                  onsubmit="return confirm('Yakin ingin menolak pengajuan ini?')">
-
+                                action="{{ route('admin.publications.status', $item->id) }}"
+                                class="inline"
+                                onsubmit="return confirm('Yakin ingin menolak pengajuan ini?')">
                                 @csrf
-
                                 <input type="hidden" name="status" value="Ditolak">
-
                                 <button type="submit"
                                         class="bg-red-500 hover:bg-red-600 text-white text-xs font-semibold px-4 py-2 rounded-lg transition">
-
                                     Tolak
-
                                 </button>
-
                             </form>
 
                         @else
 
-                            <button onclick="openModal('modal-{{ $item->id }}')"
-                                    class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-4 py-2 rounded-lg transition">
-
+                            <a href="{{ route('admin.publications.show', $item->id) }}"
+                                class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-4 py-2 rounded-lg transition">
                                 {{ $item->status === 'Disetujui' ? 'Jadwalkan' : 'Lihat Detail' }}
-
-                            </button>
+                            </a>
 
                         @endif
 
                     </div>
-
                 </div>
 
                 {{-- ═════════════════ MODAL ═════════════════ --}}
                 <div id="modal-{{ $item->id }}"
-                     class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center px-4">
+                    class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center px-4">
 
                     <div class="bg-white rounded-2xl w-full max-w-2xl shadow-2xl overflow-hidden">
 
@@ -488,6 +476,26 @@
             document.body.classList.remove('overflow-hidden');
         }
 
+        document.querySelectorAll('input[name="search"]').forEach(function (input) {
+    
+            input.addEventListener('input', function () {
+                if (this.value === '') {
+                    this.closest('form').submit();
+                }
+            });
+    
+            // Debounce: auto-submit setelah berhenti mengetik 500ms
+            let debounceTimer;
+            input.addEventListener('keyup', function () {
+                clearTimeout(debounceTimer);
+                const val = this.value;
+                debounceTimer = setTimeout(() => {
+                    // Kalau input tidak kosong, submit otomatis setelah 500ms
+                    this.closest('form').submit();
+                }, 500);
+            });
+    
+        });
     </script>
 
 </body>

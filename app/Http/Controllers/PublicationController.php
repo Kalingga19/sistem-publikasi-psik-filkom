@@ -145,11 +145,11 @@ class PublicationController extends Controller
     // Detail pengajuan untuk admin (S-07)
     public function adminShow($id)
     {
-        return redirect()
-            ->route('admin.dashboard')
-            ->with('success', 'Status pengajuan berhasil diperbarui.');
+        $publication = Publication::with(['user', 'attachments'])
+            ->findOrFail($id);
+    
+        return view('admin.show-publikasi', compact('publication'));
     }
-
 
     // Admin: update status (Setujui / Revisi / Tolak) — FR-03, UR-08, UR-09
     public function updateStatus(Request $request, $id)
