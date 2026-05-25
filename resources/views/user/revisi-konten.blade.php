@@ -139,7 +139,7 @@
                class="flex-1 h-12 flex items-center justify-center rounded-xl border border-gray-300 text-sm font-semibold text-gray-600 hover:bg-gray-50 transition no-underline">
                 Lihat Nanti
             </a>
-            <a href="{{ route('publications.create') }}"
+            <a href="{{ route('publications.edit', $publication->id) }}"
                class="flex-1 h-12 flex items-center justify-center rounded-xl bg-[#006A97] hover:bg-[#005580] text-white text-sm font-semibold transition no-underline">
                 Perbaiki Sekarang
             </a>

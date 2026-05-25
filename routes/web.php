@@ -19,38 +19,32 @@ Route::get('/register', [AuthController::class, 'showRegister'])->name('auth.reg
 Route::post('/register',[AuthController::class, 'register'])->name('register.process');
 
 // ── Auth required ───────────────────────────────────────────────
-Route::middleware('auth')->group(function () {
+    Route::middleware('auth')->group(function () {
 
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+        Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-    // Dashboard (admin → dashboard.admin | user → dashboard.user)
-    Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
-    Route::get('/user/dashboard', [DashboardController::class, 'index'])->name('user.dashboard');
+        // Dashboard (admin → dashboard.admin | user → dashboard.user)
+        Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+        Route::get('/user/dashboard', [DashboardController::class, 'index'])->name('user.dashboard');
 
-    // Profil
-    Route::get('/profile/edit',  [UserController::class, 'editProfile'])->name('profile.edit');
-    Route::put('/profile/update',[UserController::class, 'updateProfile'])->name('profile.update');
+        // Profil
+        Route::get('/profile/edit',  [UserController::class, 'editProfile'])->name('profile.edit');
+        Route::put('/profile/update',[UserController::class, 'updateProfile'])->name('profile.update');
 
-    // ── Pengajuan Konten (Pengaju) ──────────────────────────────
-    Route::prefix('pengajuan')->name('publications.')->group(function () {
+        // ── Pengajuan Konten (Pengaju) ──────────────────────────────
+        Route::prefix('pengajuan')->name('publications.')->group(function () {
+        Route::get('/', [PublicationController::class, 'index'])->name('index');
+        Route::get('/buat', [PublicationController::class, 'create'])->name('create');
+        Route::post('/', [PublicationController::class, 'store'])->name('store');
 
-        // S-04: Riwayat pengajuan milik sendiri
-        Route::get('/',         [PublicationController::class, 'index'])->name('index');
+        Route::get('/{id}/edit', [PublicationController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [PublicationController::class, 'update'])->name('update');
 
-        // S-03: Form pengajuan baru
-        Route::get('/buat',     [PublicationController::class, 'create'])->name('create');
+        Route::get('/{id}', [PublicationController::class, 'show'])->name('show');
 
-        // Simpan pengajuan baru
-        Route::post('/',        [PublicationController::class, 'store'])->name('store');
-
-        // S-05: Detail pengajuan milik sendiri
-        Route::get('/{id}',     [PublicationController::class, 'show'])->name('show');
-
-        // Download lampiran (pengaju hanya miliknya)
         Route::get('/lampiran/{attachmentId}/download',
             [PublicationController::class, 'downloadAttachment']
         )->name('attachment.download');
-
     });
 
     // ── Admin Only ──────────────────────────────────────────────

@@ -100,7 +100,7 @@ class PublicationController extends Controller
     // Detail pengajuan milik sendiri (S-05)
     public function show($id)
     {
-        $publication = Publication::with(['attachments', 'feedback.items'])
+        $publication = Publication::with(['attachments'])
             ->where('user_id', Auth::id())
             ->findOrFail($id);
 
@@ -261,5 +261,53 @@ public function showRevisiForm($id)
         return redirect()
             ->route('admin.dashboard')
             ->with('success', 'Revisi berhasil dikirim.');
+    }
+
+    public function edit($id)
+{
+    $publication = Publication::where('user_id', Auth::id())
+        ->where('status', 'Revisi')
+        ->findOrFail($id);
+
+    return view('user.edit-pengajuan', compact('publication'));
+}
+
+public function update(Request $request, $id)
+{
+    $publication = Publication::where('user_id', Auth::id())
+        ->where('status', 'Revisi')
+        ->findOrFail($id);
+
+    $validated = $request->validate([
+        'judul'            => 'required|string|max:255',
+        'jenis_konten'     => 'required|in:Prestasi Mahasiswa,Kegiatan Organisasi,Berita Akademik,Lainnya',
+        'deskripsi'        => 'required|string|min:10',
+        'tanggal_kegiatan' => 'nullable|date',
+        'lampiran.*'       => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240',
+    ]);
+
+    $publication->update([
+        'judul'            => $validated['judul'],
+        'jenis_konten'     => $validated['jenis_konten'],
+        'deskripsi'        => $validated['deskripsi'],
+        'tanggal_kegiatan' => $validated['tanggal_kegiatan'] ?? null,
+        'status'           => 'Menunggu Validasi',
+    ]);
+
+    if ($request->hasFile('lampiran')) {
+        foreach ($request->file('lampiran') as $file) {
+            $path = $file->store('publications/attachments', 'public');
+
+            PublicationAttachment::create([
+                'publication_id' => $publication->id,
+                'nama_file'      => $file->getClientOriginalName(),
+                'file_path'      => $path,
+                'tipe_file'      => strtolower($file->getClientOriginalExtension()),
+            ]);
+        }
+    }
+
+    return redirect()->route('publications.index')
+    ->with('success', 'Revisi pengajuan berhasil dikirim ulang.');
     }
 }

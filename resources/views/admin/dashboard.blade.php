@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel – FILKOM UB</title>
+    <title>Admin Panel - FILKOM UB</title>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -299,7 +299,7 @@
                             <a href="{{ route('admin.publications.revisi.form', $item->id) }}"
                                class="bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold px-4 py-2 rounded-lg transition">
 
-                                Minta Revisi
+                                Revisi Konten
 
                             </a>
 
