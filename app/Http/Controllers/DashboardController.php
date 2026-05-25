@@ -28,7 +28,7 @@ class DashboardController extends Controller
                 ->take(5)
                 ->get();
 
-            return view('dashboard.admin', compact('stats', 'recentPublications'));
+            return view('admin.dashboard', compact('stats', 'recentPublications'));
         }
 
         // Dashboard pengaju (S-02)
@@ -49,6 +49,6 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
-        return view('dashboard.user', compact('stats', 'recentPublications'));
+        return view('user.dashboard', compact('stats', 'recentPublications'));
     }
 }

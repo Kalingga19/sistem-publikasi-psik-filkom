@@ -24,8 +24,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     // Dashboard (admin → dashboard.admin | user → dashboard.user)
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/dashboard/user', [DashboardController::class, 'index'])->name('dashboard.user');
+    Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+    Route::get('/user/dashboard', [DashboardController::class, 'index'])->name('user.dashboard');
 
     // Profil
     Route::get('/profile/edit',  [UserController::class, 'editProfile'])->name('profile.edit');
